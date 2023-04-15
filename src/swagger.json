@@ -14,7 +14,7 @@
       "description": "Servidor em localhost"
     },
     {
-      "url": "https://payment-api-psi.vercel.app/api-docs/",
+      "url": "https://payment-api-psi.vercel.app",
       "description": "Servidor em deployment"
     }
   ],
