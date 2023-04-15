@@ -13,7 +13,7 @@ const CSS_URL =
 
 app.use(express.json());
 app.use(
-  "/doc",
+  "/api-docs",
   swaggerUI.serve,
   swaggerUI.setup(swaggerDocument, { customCssUrl: CSS_URL })
 );
