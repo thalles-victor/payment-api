@@ -1,29 +1,39 @@
-import express from "express";
+import express, { response } from "express";
 import type { Request, Response } from "express";
 import { cards } from "./cards";
+import swaggerUI from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
+import { ChargeSchema } from "./Schemas/Charge.schema";
+import { ChardDTO } from "./@types/Charge.dto";
 
 const app = express();
 
 app.use(express.json());
+app.use("/doc", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+app.get("/", (request, response) => {
+  return response.status(200).json({
+    message: "Server running...",
+  });
+});
 
 app.post("/charge", (request: Request, response: Response) => {
-  const cardDTO = request.body.card;
+  const orderDTO = request.body;
 
-  if (!cardDTO) {
+  const result = ChargeSchema.safeParse(orderDTO);
+
+  if (!result.success) {
+    const formatted = result.error.format();
     return response.status(400).json({
       statusCode: 400,
       message: "bad request",
+      more_info: formatted,
     });
   }
 
-  if (!cardDTO) {
-    return response.status(400).json({
-      statusCode: 400,
-      message: "parameters invalid, required card object",
-    });
-  }
-
-  const card = cards.find((_card) => _card.number === cardDTO.number);
+  const card = cards.find(
+    (_card) => _card.number === orderDTO.order.card.number
+  );
 
   if (!card) {
     return response.status(404).json({
@@ -33,7 +43,7 @@ app.post("/charge", (request: Request, response: Response) => {
     });
   }
 
-  if (card.holder !== cardDTO.holder) {
+  if (card.holder !== orderDTO.order.card.holder) {
     return response.status(404).json({
       statusCode: 404,
       message: "payment refused",
@@ -41,7 +51,7 @@ app.post("/charge", (request: Request, response: Response) => {
     });
   }
 
-  if (card.exp_year !== cardDTO.exp_year) {
+  if (card.exp_year !== orderDTO.order.card.exp_year) {
     return response.status(404).json({
       statusCode: 404,
       message: "payment refused",
@@ -49,7 +59,7 @@ app.post("/charge", (request: Request, response: Response) => {
     });
   }
 
-  if (card.exp_mouth !== cardDTO.exp_mouth) {
+  if (card.exp_month !== orderDTO.order.card.exp_month) {
     return response.status(404).json({
       statusCode: 404,
       message: "payment refused",
@@ -57,7 +67,7 @@ app.post("/charge", (request: Request, response: Response) => {
     });
   }
 
-  if (card.security_code !== cardDTO.security_code) {
+  if (card.security_code !== orderDTO.order.card.security_code) {
     return response.status(404).json({
       statusCode: 404,
       message: "payment refused",
@@ -66,7 +76,16 @@ app.post("/charge", (request: Request, response: Response) => {
   }
 
   return response.status(200).json({
+    statusCode: 200,
     payment_status: "PAYED",
+    message: "payment was approved",
+    paid_in: new Date(),
+
+    purchase_information: {
+      title: orderDTO.order.title,
+      price: orderDTO.order.price,
+      installments: orderDTO.order.installments,
+    },
   });
 });
 
