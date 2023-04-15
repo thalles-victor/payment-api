@@ -4,7 +4,6 @@ import { cards } from "./cards";
 import swaggerUI from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import { ChargeSchema } from "./Schemas/Charge.schema";
-import { ChardDTO } from "./@types/Charge.dto";
 
 const app = express();
 

@@ -1,11 +1,10 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "DevSart backend",
-    "description": "Backend do projeto devstar",
+    "title": "DevSart PaymentAPI",
+    "description": "Backend do api de pagamento da devstart.",
     "license": {
-      "name": "MIT",
-      "url": "https://www.linkedin.com/in/thalles-v%C3%ADctor-760114208/"
+      "name": "MIT"
     },
     "version": "1.0.0"
   },
@@ -13,6 +12,10 @@
     {
       "url": "http://localhost:3000",
       "description": "Servidor em localhost"
+    },
+    {
+      "url": "https://payment-api-psi.vercel.app/api-docs/",
+      "description": "Servidor em deployment"
     }
   ],
   "paths": {
