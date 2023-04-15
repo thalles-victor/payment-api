@@ -8,8 +8,15 @@ import { ChardDTO } from "./@types/Charge.dto";
 
 const app = express();
 
+const CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+
 app.use(express.json());
-app.use("/doc", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use(
+  "/doc",
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerDocument, { customCssUrl: CSS_URL })
+);
 
 app.get("/", (request, response) => {
   return response.status(200).json({
