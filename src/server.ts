@@ -12,11 +12,7 @@ const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 app.use(express.json());
-app.use(
-  "/api-docs",
-  swaggerUI.serve,
-  swaggerUI.setup(swaggerDocument, { customCssUrl: CSS_URL })
-);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.get("/", (request, response) => {
   return response.status(200).json({
